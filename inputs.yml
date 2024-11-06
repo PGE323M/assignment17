@@ -1,0 +1,49 @@
+'conversion factor': 6.33e-3
+'fluid':
+    'water':
+        'compressibility': 1.0e-6 #psi^{-1}
+        'viscosity': 1.0 #cp
+        'formation volume factor': 1.0 
+'reservoir': 
+    'permeability': 50 #mD
+    'porosity': 0.2
+    'length': 10000 #ft
+    'height': 200000 #ft
+    'depth': 1 #ft
+'initial conditions': 
+    'pressure': 1000 #psi
+'boundary conditions':
+    'left': 
+        'type': 'prescribed pressure'
+        'value': 2000 #psi
+    'right': 
+        'type': 'prescribed flux'
+        'value': 0 #ft^3/day
+    'top': 
+        'type': 'prescribed flux'
+        'value': 0 #psi
+    'bottom': 
+        'type': 'prescribed flux'
+        'value': 0 #ft^3/day
+'wells':
+    'rate':
+        'locations': 
+            - [0.0, 1.0]
+            - [9999.0, 2.0]
+        'values': [1000, 1000]
+        'radii': [0.25, 0.25]
+    'bhp':
+        'locations': 
+            - [6250.0, 1.0]
+        'values': [800]
+        'radii': [0.25]
+        'skin factor': 0.0
+'numerical': 
+    'solver': 'implicit'
+    'number of grids': 
+        'x': 4
+        'y': 1
+    'time step': 1 #day
+    'number of time steps' : 3 
+'plots': 
+    'frequency': 1
