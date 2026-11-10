@@ -1,0 +1,9 @@
+name: assignment17
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - numpy=2.1
+  - scipy=1.14
+  - matplotlib=3.9
+  - pyyaml=6.0

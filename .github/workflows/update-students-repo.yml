@@ -1,0 +1,53 @@
+name: Publish student template
+
+on:
+  push:
+    branches: [students]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-assignment17-student-template
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.repository == 'PGE323M/assignment17-solution' && github.ref == 'refs/heads/students'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out sanitized student branch
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Verify sanitized branch
+        run: |
+          test "$(git rev-list --count HEAD)" -eq 1
+          test "$(git show -s --format=%P HEAD)" = ""
+          test ! -e private_test.py
+          test ! -e assignment17.ipynb
+          test ! -e watch_simulation.py
+          test ! -e test_watcher.py
+          for path in assignment17.py assignment15.py assignment13.py run_simulation.py check_simulation.py test.py test_completion.py test_submission.py submission-policy.json inputs.yml inputs-1d.yml README.md AGENTS.md .github/skills/submit-assignment/SKILL.md .github/skills/submit-assignment/scripts/submit.py; do
+            test -f "$path"
+          done
+          test "$(grep -c 'raise NotImplementedError' assignment17.py)" -eq 3
+          ! grep --fixed-strings 'np.searchsorted' assignment17.py
+          ! grep --fixed-strings 'np.add.at' assignment17.py
+          ! grep --fixed-strings 'denominator = np.log' assignment17.py
+          ! grep --fixed-strings 'raise NotImplementedError' assignment15.py assignment13.py
+
+      - name: Push sanitized tree to public template
+        env:
+          SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
+        run: |
+          install -d -m 700 "$HOME/.ssh"
+          printf '%s\n' "$SSH_DEPLOY_KEY" > "$HOME/.ssh/deploy_key"
+          chmod 600 "$HOME/.ssh/deploy_key"
+          ssh-keyscan -H github.com > "$HOME/.ssh/known_hosts"
+          export GIT_SSH_COMMAND="ssh -i $HOME/.ssh/deploy_key -o IdentitiesOnly=yes -o UserKnownHostsFile=$HOME/.ssh/known_hosts"
+          git remote set-url origin git@github.com:PGE323M/assignment17.git
+          git branch -M master
+          git push --force origin master

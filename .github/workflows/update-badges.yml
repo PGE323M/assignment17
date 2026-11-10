@@ -1,0 +1,23 @@
+name: Update assignment badge
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    if: startsWith(github.event.repository.name, 'assignment17-')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Update badge repository path
+        run: sed -i "s|PGE323M/assignment17/actions|${GITHUB_REPOSITORY}/actions|g" README.md
+
+      - name: Commit badge update
+        uses: stefanzweifel/git-auto-commit-action@v7
+        with:
+          commit_message: Update assignment badge

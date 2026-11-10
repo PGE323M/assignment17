@@ -1,0 +1,52 @@
+conversion factor: 0.00633
+fluid:
+  water:
+    compressibility: 1.0e-06
+    viscosity: 1.0
+    formation volume factor: 1.0
+reservoir:
+  permeability: 50
+  porosity: 0.2
+  length: 10000
+  height: 10000
+  depth: 20
+initial conditions:
+  pressure: 1000
+boundary conditions:
+  left:
+    type: prescribed flux
+    value: 0
+  right:
+    type: prescribed pressure
+    value: 2000
+  top:
+    type: prescribed flux
+    value: 0
+  bottom:
+    type: prescribed flux
+    value: 0
+wells:
+  rate:
+    locations:
+    - - 5000
+      - 5000
+    values:
+    - 1000
+    radii:
+    - 0.25
+  bhp:
+    locations:
+    - - 9000
+      - 9000
+    values:
+    - 800
+    radii:
+    - 0.25
+    skin factor: 0.0
+numerical:
+  solver: implicit
+  number of grids:
+    x: 3
+    y: 3
+  time step: 1
+  number of time steps: 3

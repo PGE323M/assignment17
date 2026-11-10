@@ -1,0 +1,25 @@
+name: Assignment tests
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Create assignment environment
+        uses: mamba-org/setup-micromamba@v3
+        with:
+          environment-file: environment.yml
+
+      - name: Run public tests
+        shell: micromamba-shell {0}
+        run: env -u SUBMISSION_VALIDATION python -m unittest -v test.py test_completion.py test_submission.py
